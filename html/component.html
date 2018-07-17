@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>组件传值</title>
+
+</head>
+
+<body>
+
+    <div id="root">
+        <div>
+            <input type="text" v-model="todoValue">
+            <button @click="handleClick">提交</button>
+        </div>
+        <ul>
+            <todo-item v-for="(item,index) in list " 
+                       :index="index"  
+                       :content="item" 
+                       @delete = "deleteSon">
+
+            </todo-item>
+        </ul> 
+
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        //全局注册组件
+        // Vue.component("TodoItem",{
+        //     props:["content"],
+        //     template:"<li>{{content}}</li>"
+        // })
+
+        //局部组件（对象形式,需在根部注册）
+        var TodoItem = {
+            props:["content",'index'],
+            template:"<li @click='deleteSelf'>{{content}}</li>",
+            methods:{
+                deleteSelf:function(){
+                    this.$emit('delete',this.index);
+                }
+            }
+        }
+        var app = new Vue({
+            el:"#root",
+            components:{
+                TodoItem
+            },
+            data:{
+                todoValue:"",
+                list:[]
+            },
+            methods:{
+                handleClick:function(){
+                    this.list.push(this.todoValue);
+                    this.todoValue = "";
+                },
+                deleteSon:function(index){
+                    this.list.splice(index,1)
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
